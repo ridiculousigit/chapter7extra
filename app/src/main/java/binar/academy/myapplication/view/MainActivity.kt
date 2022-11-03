@@ -1,4 +1,4 @@
-package binar.academy.myapplication
+package binar.academy.myapplication.view
 
 import android.Manifest
 import android.app.Activity
