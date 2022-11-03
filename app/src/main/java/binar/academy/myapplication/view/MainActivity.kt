@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.ivProfile.setImageURI(result)
 
         val tempFile = File.createTempFile("image", "jpg",null)
-        val inputStream = contentResolver.openInputStream(result!!)
+        val inputStream = contentResolver.openInputStream(result)
         tempFile.outputStream().use {
             inputStream?.copyTo(it)
         }
@@ -67,16 +67,21 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.postAPIUser(name, email, pass, phone, address, city, image)
         viewModel.registeredUser.observe(this){
-            if(it != null){
-                Toast.makeText(this,"Registration Success", Toast.LENGTH_SHORT)
-            }else{
-                Toast.makeText(this,"Registration Failed", Toast.LENGTH_SHORT)
+            if (it != null) {
+                Toast.makeText(this,"Akun berhasil dibuat !", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this,"Pendaftaran akun gagal !", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun uploadImage() {
         appsPermissions()
+    }
+
+    private fun galleryAccess() {
+        this.intent.type = "image/*"
+        imageRes.launch("image/*")
     }
 
     private fun appsPermissions() {
@@ -115,9 +120,9 @@ class MainActivity : AppCompatActivity() {
     private fun appsDenied() {
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Permission Denied")
-            .setMessage("Permission is denied, Please allow permissions from App Settings.")
+            .setMessage("Harap memberikan izin kepada aplikasi untuk mengakses galeri Anda.")
             .setPositiveButton(
-                "App Settings"
+                "Pengaturan Aplikasi"
             ) { _, _ ->
                 val intent = Intent()
                 intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -125,13 +130,8 @@ class MainActivity : AppCompatActivity() {
                 intent.data = uri
                 startActivity(intent)
             }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+            .setNegativeButton("Batalkan") { dialog, _ -> dialog.cancel() }
             .show()
-    }
-
-    private fun galleryAccess() {
-        this.intent.type = "image/*"
-        imageRes.launch("image/*")
     }
 
 }
